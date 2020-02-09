@@ -5,6 +5,42 @@
         <title>Knights</title>
     </head>
     <body>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec2 a_position;
+
+            uniform vec2 u_resolution; // キャンバスの解像度
+
+            varying vec2 v_foo;
+
+            void main() {
+                vec2 zeroToOne = a_position / u_resolution;
+
+                v_foo = zeroToOne;
+
+                vec2 zeroToTwo = zeroToOne * 2.0;
+
+                vec2 clipSpace = vec2(zeroToTwo.x - 1.0, 1.0 - zeroToTwo.y);
+
+                gl_Position = vec4(clipSpace, 0, 1);
+            }
+        </script>
+
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            uniform float u_time;
+
+            varying vec2 v_foo;
+
+            void main() {
+                gl_FragColor = vec4(v_foo, (cos(u_time) + 1.0) / 2.0, 1);
+            }
+        </script>
+
+        <div style="position: absolute; top: 0; left: 0; z-index: 0; border: 1px solid purple;">
+            <canvas id="webgl" width="600" height="600"></canvas>
+        </div>
+
         <div id="app"></div>
     </body>
 </html>
